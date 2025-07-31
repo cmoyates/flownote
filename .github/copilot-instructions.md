@@ -4,6 +4,9 @@
 
 - Always use arrow functions for typescript function definitions (unless explicily asked to do otherwise)
 - Don't explicitly provide return types for typescript functions; let them be inferred.
+- Use `jotai` for state management.
+- Use `react-native-reusables` for common components and utilities.
+- Use `react-native-primatives` for primitive components.
 
 ## Aliases
 
