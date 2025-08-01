@@ -103,14 +103,11 @@ interface DotMatrixProps {
   paused: SharedValue<boolean>;
 }
 
-const DOT_SIZE = 10.0;
-const SPACING = 0.0;
 const COLOR: [number, number, number, number] = [1.0, 1.0, 1.0, 1.0];
 const BACKGROUND_COLOR: [number, number, number, number] = [0.0, 0.0, 0.0, 1.0];
 const SPEED = 0.0005;
 const NOISE_SCALE = 0.006;
 const SHAPE_MIX = 0.0;
-const MAX_BRIGHTNESS = 1.0;
 
 export const useFlickerFreeClock = (
   speed: SharedValue<number>,
