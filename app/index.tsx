@@ -6,6 +6,8 @@ import { refineTranscription, transcribeAudio } from "~/services/transcription";
 import * as FileSystem from "expo-file-system";
 import { DotMatrix } from "~/components/DotMatrix";
 import { Mic, Pause, X } from "lucide-react-native";
+import { Toggle, ToggleIcon } from "~/components/ui/toggle";
+import { useSharedValue, withTiming, Easing } from "react-native-reanimated";
 
 export default function Screen() {
   const [recordingPath, setRecordingPath] = useState<string | null>(null);
@@ -13,6 +15,12 @@ export default function Screen() {
   const [refinedTranscription, setRefinedTranscription] = useState<
     string | null
   >(null);
+  const [isRecording, setIsRecording] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const maxBrightness = useSharedValue(0.5);
+  const speed = useSharedValue(0.00025);
+  const paused = useSharedValue(false);
 
   const { setupAudio, startRecording, stopRecording, recorderState } =
     useAudioService();
@@ -34,6 +42,16 @@ export default function Screen() {
     const isRecordingStarted = await startRecording();
     if (isRecordingStarted) {
       console.log("Recording started successfully");
+
+      speed.value = withTiming(0.0005, {
+        duration: 2000,
+        easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+      });
+      maxBrightness.value = withTiming(1.0, {
+        duration: 200,
+        easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+      });
+
       setRecordingPath(null); // Reset recording path when starting a new recording
       setTranscription(null); // Clear previous transcription
       setRefinedTranscription(null); // Clear previous refined transcription
@@ -45,6 +63,15 @@ export default function Screen() {
   const handleStopRecording = async () => {
     const path = await stopRecording();
     if (path) {
+      speed.value = withTiming(0.00025, {
+        duration: 2000,
+        easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+      });
+      maxBrightness.value = withTiming(0.5, {
+        duration: 200,
+        easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
+      });
+
       setRecordingPath(path);
       console.log("Recording stopped and saved at:", path);
     } else {
@@ -105,7 +132,11 @@ export default function Screen() {
   return (
     <View className="flex-1 justify-center items-center bg-secondary/30 flex-col">
       <View className="flex-1 w-full justify-center items-center">
-        <DotMatrix />
+        <DotMatrix
+          speed={speed}
+          maxBrightness={maxBrightness}
+          paused={paused}
+        />
       </View>
       <View className="w-full flex-row justify-center items-center bg-background py-8 gap-8 border-t border-secondary">
         <Button
@@ -124,13 +155,17 @@ export default function Screen() {
         >
           <Mic color={recorderState.isRecording ? "white" : "black"} />
         </Button>
-        <Button
+        <Toggle
+          pressed={isPaused}
+          onPressedChange={() => {
+            setIsPaused(!isPaused);
+          }}
           variant={"outline"}
           className="aspect-square"
           disabled={!recorderState.isRecording}
         >
-          <Pause color="white" />
-        </Button>
+          <ToggleIcon icon={Pause} color="white" />
+        </Toggle>
       </View>
     </View>
   );
