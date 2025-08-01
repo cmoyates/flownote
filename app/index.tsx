@@ -139,15 +139,15 @@ export default function Screen() {
   };
 
   return (
-    <View className="flex-1 justify-center items-center bg-secondary/30 flex-col">
-      <View className="flex-1 w-full justify-center items-center">
+    <View className="flex-1 flex-col items-center justify-center bg-secondary/30">
+      <View className="w-full flex-1 items-center justify-center">
         <DotMatrix
           speed={speed}
           maxBrightness={maxBrightness}
           paused={paused}
         />
       </View>
-      <View className="w-full flex-row justify-center items-center py-8 gap-8 absolute bottom-0">
+      <View className="absolute bottom-0 w-full flex-row items-center justify-center gap-8 py-8">
         <Button
           className="aspect-square"
           size={"lg"}
