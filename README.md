@@ -1,16 +1,20 @@
-# Starter base
+# FlowNote
 
-A starting point to help you set up your project quickly and use the common components provided by `react-native-reusables`. The idea is to make it easier for you to get started.
+A note-taking AI helper designed to capture, refine, and organize your thoughts seamlessly. FlowNote records your voice, transcribes it, and uses an LLM to process the content into coherent notes, which are then saved directly to your Notion workspace.
 
-## Features
+This app is being developed with React Native and TypeScript using the Expo framework, with an initial focus on deployment to Android via APK so I can just upload it to my phone.
 
-- NativeWind v4
-- Dark and light mode
-  - Android Navigation Bar matches mode
-  - Persistent mode
-- Common components
-  - ThemeToggle, Avatar, Button, Card, Progress, Text, Tooltip
+## Todo
 
-<img src="https://github.com/mrzachnugent/react-native-reusables/assets/63797719/42c94108-38a7-498b-9c70-18640420f1bc"
-     alt="starter-base-template"
-     style="width:270px;" />
+- [x] Audio recording
+- [x] Audio transcription
+- [x] Transcription refinement
+- [ ] Upload refined transcript to Notion
+- [ ] Onboarding
+  - [ ] API key management
+  - [ ] Notion database selection
+- [ ] User controls
+  - [ ] Start / stop recording
+  - [ ] Cancel recording
+  - [ ] Pause / resume recording
+- [ ] Visualizer
