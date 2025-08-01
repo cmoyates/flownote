@@ -1,27 +1,16 @@
 import { View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { Text } from "~/components/ui/text";
-import { addNoteToNotion } from "~/services/notion";
-
-const MARKDOWN_STRING = `# Sample Markdown
-This is a sample markdown document.
-## Subheading
-`;
 
 export default function Screen() {
   return (
-    <View className="flex-1 justify-center items-center gap-5 p-6 bg-secondary/30">
-      <Button
-        variant="outline"
-        onPress={async () => {
-          await addNoteToNotion(
-            MARKDOWN_STRING,
-            process.env.EXPO_PUBLIC_NOTION_DATABASE_ID || ""
-          );
-        }}
-      >
-        <Text>Notion to MD</Text>
-      </Button>
+    <View className="flex-1 justify-center items-center bg-secondary/30 flex-col">
+      <View className="absolute bottom-0 left-0 right-0 flex-col justify-center items-center bg-black py-8">
+        <Text className="text-lg font-semibold text-primary">FlowNote</Text>
+        <Button variant={"outline"}>
+          <Text>Debug</Text>
+        </Button>
+      </View>
     </View>
   );
 }

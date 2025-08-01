@@ -1,5 +1,5 @@
 {
-  "name": ".",
+  "name": "flownote",
   "main": "index.js",
   "version": "1.0.0",
   "scripts": {
@@ -13,7 +13,6 @@
     "postinstall": "npx tailwindcss -i ./global.css -o ./node_modules/.cache/nativewind/global.css"
   },
   "dependencies": {
-    "@google/generative-ai": "^0.24.1",
     "@notionhq/client": "^4.0.1",
     "@react-navigation/native": "^7.0.0",
     "@rn-primitives/avatar": "~1.2.0",
@@ -27,11 +26,13 @@
     "@rn-primitives/switch": "^1.2.0",
     "@rn-primitives/tabs": "^1.2.0",
     "@rn-primitives/tooltip": "~1.2.0",
+    "@shopify/react-native-skia": "^2.1.1",
     "caniuse-lite": "^1.0.30001731",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "expo": "^53.0.9",
     "expo-audio": "~0.4.8",
+    "expo-dev-client": "~5.2.4",
     "expo-linking": "~7.1.5",
     "expo-navigation-bar": "~4.2.4",
     "expo-router": "~5.1.4",

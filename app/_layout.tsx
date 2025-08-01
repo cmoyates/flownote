@@ -10,6 +10,7 @@ import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import * as React from "react";
 import { Appearance, Platform, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { NAV_THEME } from "~/lib/constants";
 import { useColorScheme } from "~/lib/useColorScheme";
 import { PortalHost } from "@rn-primitives/portal";
@@ -42,17 +43,20 @@ export default function RootLayout() {
 
   return (
     <ThemeProvider value={isDarkColorScheme ? DARK_THEME : LIGHT_THEME}>
-      <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
-      <Stack>
-        <Stack.Screen
-          name="index"
-          options={{
-            title: "FlowNote",
-            headerRight: () => <ThemeToggle />,
-          }}
-        />
-      </Stack>
-      <PortalHost />
+      <SafeAreaView style={{ flex: 1 }}>
+        <StatusBar style={isDarkColorScheme ? "light" : "dark"} />
+        <Stack>
+          <Stack.Screen
+            name="index"
+            options={{
+              title: "FlowNote",
+              headerRight: () => <ThemeToggle />,
+              headerShown: false,
+            }}
+          />
+        </Stack>
+        <PortalHost />
+      </SafeAreaView>
     </ThemeProvider>
   );
 }
