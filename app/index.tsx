@@ -8,16 +8,9 @@ import { DotMatrix } from "~/components/DotMatrix";
 import { Mic, Pause, X } from "lucide-react-native";
 import { Toggle, ToggleIcon } from "~/components/ui/toggle";
 import { useSharedValue, withTiming, Easing } from "react-native-reanimated";
+import { addNoteToNotion, NOTION_DATABASE_ID } from "~/services/notion";
 
 export default function Screen() {
-  const [recordingPath, setRecordingPath] = useState<string | null>(null);
-  const [transcription, setTranscription] = useState<string | null>(null);
-  const [refinedTranscription, setRefinedTranscription] = useState<
-    string | null
-  >(null);
-  const [isRecording, setIsRecording] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-
   const maxBrightness = useSharedValue(0.5);
   const speed = useSharedValue(0.00025);
   const paused = useSharedValue(false);
@@ -51,10 +44,6 @@ export default function Screen() {
         duration: 200,
         easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
       });
-
-      setRecordingPath(null); // Reset recording path when starting a new recording
-      setTranscription(null); // Clear previous transcription
-      setRefinedTranscription(null); // Clear previous refined transcription
     } else {
       console.error("Failed to start recording");
     }
@@ -72,8 +61,9 @@ export default function Screen() {
         easing: Easing.bezier(0.25, 0.46, 0.45, 0.94),
       });
 
-      setRecordingPath(path);
       console.log("Recording stopped and saved at:", path);
+
+      return path; // Return the recording path for further processing
     } else {
       console.error("Failed to stop recording");
     }
@@ -82,18 +72,35 @@ export default function Screen() {
   const handleToggleRecording = async () => {
     const isRecording = recorderState.isRecording;
     if (isRecording) {
-      await handleStopRecording();
+      const recordingPath = await handleStopRecording();
+      if (!recordingPath) {
+        console.error("No recording path available");
+        return;
+      }
+
+      const transcription = await handleTranscription(recordingPath);
+      if (!transcription) {
+        console.error("No transcription available");
+        return;
+      }
+
+      const refinedTranscription = await handleRefineTranscription(
+        transcription
+      );
+      if (!refinedTranscription) {
+        console.error("No refined transcription available");
+        return;
+      }
+
+      console.log("Note:", refinedTranscription);
+
+      addNoteToNotion(refinedTranscription, NOTION_DATABASE_ID);
     } else {
       await handleStartRecording();
     }
   };
 
-  const handleTranscription = async () => {
-    if (!recordingPath) {
-      console.error("No recording available for transcription");
-      return;
-    }
-
+  const handleTranscription = async (recordingPath: string) => {
     try {
       // Assuming you have a transcription service set up
       const transcription = await transcribeAudio(recordingPath);
@@ -101,17 +108,17 @@ export default function Screen() {
         return;
       }
 
-      setTranscription(transcription);
       await FileSystem.deleteAsync(recordingPath, { idempotent: true });
-      setRecordingPath(null);
 
       console.log("Transcription:", transcription);
+
+      return transcription;
     } catch (error) {
       console.error("Transcription failed:", error);
     }
   };
 
-  const handleRefineTranscription = async () => {
+  const handleRefineTranscription = async (transcription: string) => {
     if (!transcription) {
       console.error("No transcription available for refinement");
       return;
@@ -119,11 +126,14 @@ export default function Screen() {
 
     try {
       // Assuming you have a refineTranscription service set up
-      const refined = await refineTranscription(transcription);
-      setRefinedTranscription(refined.choices[0].message.content);
+      const refinedTranscription = await refineTranscription(transcription);
 
-      setTranscription(null); // Clear the original transcription after refinement
-      console.log("Refined Transcription:", refined.choices[0].message.content);
+      console.log(
+        "Refined Transcription:",
+        refinedTranscription.choices[0].message.content
+      );
+
+      return refinedTranscription.choices[0].message.content;
     } catch (error) {
       console.error("Refinement failed:", error);
     }
@@ -138,16 +148,10 @@ export default function Screen() {
           paused={paused}
         />
       </View>
-      <View className="w-full flex-row justify-center items-center bg-background py-8 gap-8 border-t border-secondary">
-        <Button
-          variant={"outline"}
-          className="aspect-square"
-          disabled={!recorderState.isRecording}
-        >
-          <X color="white" />
-        </Button>
+      <View className="w-full flex-row justify-center items-center py-8 gap-8 absolute bottom-0">
         <Button
           className="aspect-square"
+          size={"lg"}
           onPress={handleToggleRecording}
           style={{
             backgroundColor: recorderState.isRecording ? "red" : "white",
@@ -155,17 +159,6 @@ export default function Screen() {
         >
           <Mic color={recorderState.isRecording ? "white" : "black"} />
         </Button>
-        <Toggle
-          pressed={isPaused}
-          onPressedChange={() => {
-            setIsPaused(!isPaused);
-          }}
-          variant={"outline"}
-          className="aspect-square"
-          disabled={!recorderState.isRecording}
-        >
-          <ToggleIcon icon={Pause} color="white" />
-        </Toggle>
       </View>
     </View>
   );

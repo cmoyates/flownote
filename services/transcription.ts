@@ -60,8 +60,12 @@ export const refineTranscription = async (transcript: string) => {
   const messages: ChatMessage[] = [
     {
       role: "system",
-      content:
-        "You are a helpful assistant that cleans up transcriptions. Please remove any unnecessary filler words, pauses, or repetitions from the transcription.",
+      content: `
+        You are a helpful assistant that cleans up transcriptions. 
+        Please remove any unnecessary filler words, pauses, or repetitions from the transcription. 
+        Your response should be in markdown format with an H1 at the top acting as the title of the transcription.
+        The title should be concise and relevant to the content of the transcription.
+        `,
     },
     {
       role: "user",

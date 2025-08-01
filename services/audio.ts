@@ -61,21 +61,11 @@ export const useAudioService = () => {
     }
   };
 
-  const toggleRecording = async () => {
-    if (recorderState.isRecording) {
-      return await stopRecording();
-    } else {
-      const success = await startRecording();
-      return success;
-    }
-  };
-
   return {
     audioRecorder,
     recorderState,
     setupAudio,
     startRecording,
     stopRecording,
-    toggleRecording,
   };
 };

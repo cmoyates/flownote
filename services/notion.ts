@@ -9,6 +9,9 @@ const notion = new Client({
 
 export const n2m = new NotionToMarkdown({ notionClient: notion });
 
+export const NOTION_DATABASE_ID =
+  process.env.EXPO_PUBLIC_NOTION_DATABASE_ID || "";
+
 export const notionToMarkdown = async (pageID: string, noTitle?: boolean) => {
   const mdBlocks = await n2m.pageToMarkdown(pageID);
   const mdString = n2m.toMarkdownString(mdBlocks);
