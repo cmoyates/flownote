@@ -6,15 +6,14 @@ This app is being developed with React Native and TypeScript using the Expo fram
 
 ## Todo
 
-- [x] Audio recording
-- [x] Audio transcription
-- [x] Transcription refinement
-- [ ] Upload refined transcript to Notion
+- [x] General flow
+  - [x] Audio recording
+  - [x] Audio transcription
+  - [x] Transcription refinement
+  - [x] Upload refined transcript to Notion
 - [ ] Onboarding
   - [ ] API key management
   - [ ] Notion database selection
 - [ ] User controls
-  - [ ] Start / stop recording
-  - [ ] Cancel recording
-  - [ ] Pause / resume recording
+  - [x] Start / stop recording
 - [ ] Visualizer
