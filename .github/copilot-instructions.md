@@ -7,6 +7,7 @@
 - Use `jotai` for state management.
 - Use `react-native-reusables` for common components and utilities.
 - Use `react-native-primatives` for primitive components.
+- Use the components from `components/ui/typography.tsx` for typography.
 
 ## Aliases
 
