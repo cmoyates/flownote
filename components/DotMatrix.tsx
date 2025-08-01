@@ -16,15 +16,15 @@ import {
 const source = Skia.RuntimeEffect.Make(`
 // --- Start of Updated Shader Code ---
 
-// Uniforms
 uniform vec4 u_bg_color;
-uniform float u_dot_size;
-uniform float u_spacing;
+uniform float u_canvas_width;    // ADDED
+uniform float u_num_dots;        // ADDED
 uniform float u_time;
 uniform float u_noise_scale;
 uniform float u_shape_mix;
 uniform vec4 u_color;
-uniform float u_max_brightness; // <-- The new uniform
+uniform float u_max_brightness;
+
 
 // --- SDF Functions (unchanged) ---
 float sdCircle(vec2 p, float r) { return length(p) - r; }
@@ -62,27 +62,28 @@ float snoise(vec3 v) {
 
 vec4 main(vec2 pos) {
   // --- Setup ---
-  float dot_size = u_dot_size > 0.0 ? u_dot_size : 8.0;
-  float spacing = u_spacing >= 0.0 ? u_spacing : 4.0;
+  // Ensure num_dots is a positive number to prevent division by zero.
+  float num_dots = u_num_dots > 0.0 ? u_num_dots : 50.0;
+
+  // **The key calculation:** The size of each dot is the total width divided by
+  // the number of dots that should fit across it. This is our new 'pitch'.
+  float pitch = u_canvas_width / num_dots;
+
   float noise_scale = u_noise_scale > 0.0 ? u_noise_scale : 0.01;
-  // Use the new uniform, with a default of 1.0 if not provided or negative.
   float max_brightness = u_max_brightness > 0.0 ? u_max_brightness : 1.0;
-  float pitch = dot_size + spacing;
 
   vec2 center = floor(pos / pitch) * pitch + vec2(pitch / 2.0);
   vec3 noise_coord = vec3(center * noise_scale, u_time);
 
   // --- Brightness Calculation ---
-  // 1. Get noise value from -1.0 to 1.0
   float noise = snoise(noise_coord);
-  // 2. Normalize it to a 0.0 to 1.0 range
   float normalized_brightness = (noise + 1.0) / 2.0;
-  // 3. Scale it by the max_brightness uniform
   float brightness = normalized_brightness * max_brightness;
 
   // --- Size and Shape Calculation ---
   vec2 p = pos - center;
-  float half_size = brightness * dot_size / 2.0;
+  // The dot's base size is now the pitch.
+  float half_size = brightness * pitch / 2.0;
 
   float dist_circle = sdCircle(p, half_size);
   float dist_square = sdBox(p, vec2(half_size));
@@ -93,6 +94,7 @@ vec4 main(vec2 pos) {
   float alpha = 1.0 - smoothstep(-1.0, 1.0, dist);
   return mix(u_bg_color, dot_color, alpha);
 }
+
 `);
 
 interface DotMatrixProps {
@@ -147,8 +149,8 @@ export const DotMatrix = ({ speed, maxBrightness, paused }: DotMatrixProps) => {
   const clock = useFlickerFreeClock(speed, paused);
 
   const uniforms = useDerivedValue(() => ({
-    u_dot_size: DOT_SIZE,
-    u_spacing: SPACING,
+    u_canvas_width: width,
+    u_num_dots: 30, // Adjust this to change the number of dots
     u_color: COLOR,
     u_bg_color: BACKGROUND_COLOR,
     u_time: clock.value,
