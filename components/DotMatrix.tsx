@@ -68,8 +68,13 @@ const source = Skia.RuntimeEffect.Make(`
     float pitch = dot_size + spacing;
 
     vec2 center = floor(pos / pitch) * pitch + vec2(pitch / 2.0);
+
+    vec3 noise_coord = vec3(center * noise_scale, u_time * speed);
+    float brightness = (snoise(noise_coord) + 1.0) / 2.0;
+
+
     vec2 p = pos - center;
-    float half_size = dot_size / 2.0;
+    float half_size = brightness*dot_size / 2.0;
 
     // --- SDF Morphing ---
     float dist_circle = sdCircle(p, half_size);
@@ -78,8 +83,7 @@ const source = Skia.RuntimeEffect.Make(`
     float dist = mix(dist_circle, dist_square, u_shape_mix);
 
     // --- Drawing (unchanged) ---
-    vec3 noise_coord = vec3(center * noise_scale, u_time * speed);
-    float brightness = (snoise(noise_coord) + 1.0) / 2.0;
+
     vec4 dot_color = vec4(brightness * u_color[0], brightness * u_color[1], brightness * u_color[2], 1.0);
     float alpha = 1.0 - smoothstep(-1.0, 1.0, dist);
     return mix(u_bg_color, dot_color, alpha);
@@ -99,7 +103,7 @@ interface DotMatrixProps {
 export const DotMatrix = ({
   dotSize = 18.0,
   spacing = 16.0,
-  color = [1.0, 0.0, 0.0, 1.0],
+  color = [1.0, 1.0, 1.0, 1.0],
   backgroundColor = [0.0, 0.0, 0.0, 1.0],
   speed = 0.0005,
   noiseScale = 0.006,
