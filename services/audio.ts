@@ -53,10 +53,6 @@ export const useAudioService = () => {
     try {
       await audioRecorder.stop();
       console.log("Recording stopped. File saved at:", audioRecorder.uri);
-      Alert.alert(
-        "Recording Completed",
-        `Recording saved at: ${audioRecorder.uri}`
-      );
       return audioRecorder.uri;
     } catch (error) {
       console.error("Recording stop error:", error);
