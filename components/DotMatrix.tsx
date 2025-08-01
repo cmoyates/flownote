@@ -101,8 +101,8 @@ interface DotMatrixProps {
 }
 
 export const DotMatrix = ({
-  dotSize = 18.0,
-  spacing = 16.0,
+  dotSize = 10.0,
+  spacing = 0.0,
   color = [1.0, 1.0, 1.0, 1.0],
   backgroundColor = [0.0, 0.0, 0.0, 1.0],
   speed = 0.0005,

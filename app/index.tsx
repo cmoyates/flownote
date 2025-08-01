@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import { View } from "react-native";
 import { Button } from "~/components/ui/button";
-import { Text } from "~/components/ui/text";
-import { H1, H3, P } from "~/components/ui/typography";
 import { useAudioService } from "~/services/audio";
 import { refineTranscription, transcribeAudio } from "~/services/transcription";
-import * as FileSystem from "expo-file-system"; // Ensure you have this import for file system operations
-import { useRouter } from "expo-router";
+import * as FileSystem from "expo-file-system";
 import { DotMatrix } from "~/components/DotMatrix";
+import { Mic, Pause, X } from "lucide-react-native";
 
 export default function Screen() {
   const [recordingPath, setRecordingPath] = useState<string | null>(null);
@@ -15,8 +13,6 @@ export default function Screen() {
   const [refinedTranscription, setRefinedTranscription] = useState<
     string | null
   >(null);
-
-  const router = useRouter();
 
   const { setupAudio, startRecording, stopRecording, recorderState } =
     useAudioService();
@@ -108,43 +104,32 @@ export default function Screen() {
 
   return (
     <View className="flex-1 justify-center items-center bg-secondary/30 flex-col">
-      <View className="justify-center items-center gap-8 p-8 bg-black w-full">
-        <View className="flex flex-col justify-center items-center">
-          <H1>Welcome to FlowNote</H1>
-          <H3>Your personal AI-powered note-taking app.</H3>
-        </View>
-        {recordingPath && <P>Recording saved at: {recordingPath}</P>}
-        {transcription && (
-          <P className="text-center">Transcription: {transcription}</P>
-        )}
-        {refinedTranscription && (
-          <P className="text-center">
-            Refined Transcription: {refinedTranscription}
-          </P>
-        )}
-      </View>
       <View className="flex-1 w-full justify-center items-center">
         <DotMatrix />
       </View>
       <View className="w-full flex-row justify-center items-center bg-background py-8 gap-8 border-t border-secondary">
-        <Button variant={"outline"} onPress={handleToggleRecording}>
-          <Text>
-            {recorderState.isRecording ? "Stop recording" : "Start recording"}
-          </Text>
+        <Button
+          variant={"outline"}
+          className="aspect-square"
+          disabled={!recorderState.isRecording}
+        >
+          <X color="white" />
+        </Button>
+        <Button
+          className="aspect-square"
+          onPress={handleToggleRecording}
+          style={{
+            backgroundColor: recorderState.isRecording ? "red" : "white",
+          }}
+        >
+          <Mic color={recorderState.isRecording ? "white" : "black"} />
         </Button>
         <Button
           variant={"outline"}
-          onPress={handleTranscription}
-          disabled={!recordingPath}
+          className="aspect-square"
+          disabled={!recorderState.isRecording}
         >
-          <Text>Transcribe</Text>
-        </Button>
-        <Button
-          variant={"outline"}
-          onPress={handleRefineTranscription}
-          disabled={!transcription}
-        >
-          <Text>Refine Transcription</Text>
+          <Pause color="white" />
         </Button>
       </View>
     </View>
