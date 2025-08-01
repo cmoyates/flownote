@@ -35,7 +35,7 @@ export const getPageTitle = async (pageID: string) => {
     // Extract title from page properties
     // The title is usually in a property called "title" or could be the first title property
     const titleProperty = Object.values(page.properties).find(
-      (property) => property.type === "title"
+      (property) => property.type === "title",
     );
 
     if (titleProperty && titleProperty.type === "title") {
@@ -64,8 +64,8 @@ const markdownToNotionBlocks = (markdown: string) => {
           token.depth === 1
             ? "heading_1"
             : token.depth === 2
-            ? "heading_2"
-            : "heading_3";
+              ? "heading_2"
+              : "heading_3";
         if (headingType === "heading_1") {
           blocks.push({
             object: "block",

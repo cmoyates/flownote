@@ -21,19 +21,16 @@
 ### 2.1. Critical Technology Documentation
 
 - **React Native & Expo:**
-
   - **Expo Audio (`expo-audio`):** The core library for audio recording. The `useAudioRecorder` hook is central to the implementation, providing control over recording instances. The `useAudioRecorderState` hook will be used to get real-time status updates, including the crucial `metering` value for VAD.
   - **Expo SecureStore (`expo-secure-store`):** The standard for securely storing sensitive data like API keys.
   - **NativeWind:** The primary styling library, requiring configuration in `tailwind.config.js` and `babel.config.js`.
   - **Permissions:** The `expo-audio` library includes `AudioModule.requestRecordingPermissionsAsync()` to properly handle microphone access requests.
 
 - **Voice Activity Detection (VAD):**
-
   - **Concept:** Distinguish speech from silence to trigger recording.
   - **Implementation:** The plan remains to use a simple amplitude-based VAD. This is achieved by monitoring the `metering` property from the `useAudioRecorderState` hook. When the audio level (in dBFS) crosses a predefined threshold, recording starts; when it drops below for a certain duration, it stops. This avoids external dependencies and is highly efficient.
 
 - **Google Gemini API:**
-
   - **SDK:** The `@google/genai` JavaScript SDK.
   - **Security:** API keys will be managed via the settings screen and stored with `expo-secure-store`. **Documentation will strongly recommend a backend proxy for any public-facing app.**
 

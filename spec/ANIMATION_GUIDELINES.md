@@ -9,7 +9,6 @@
 
 - Don't use built-in CSS easings unless it's `ease` or `linear`.
 - Use the following easings for their described use case:
-
   - **`ease-in`**: (Starts slow, speeds up) Should generally be avoided as it makes the UI feel slow.
     - `ease-in-quad`: `cubic-bezier(.55, .085, .68, .53)`
     - `ease-in-cubic`: `cubic-bezier(.550, .055, .675, .19)`

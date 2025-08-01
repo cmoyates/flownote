@@ -114,7 +114,7 @@ const MAX_BRIGHTNESS = 1.0;
 
 export const useFlickerFreeClock = (
   speed: SharedValue<number>,
-  isPaused: SharedValue<boolean>
+  isPaused: SharedValue<boolean>,
 ) => {
   const integratedTime = useSharedValue(0);
   const lastTimestamp = useSharedValue(0);
@@ -145,7 +145,7 @@ export const useFlickerFreeClock = (
 };
 
 export const DotMatrix = ({ speed, maxBrightness, paused }: DotMatrixProps) => {
-  const { width, height } = useWindowDimensions();
+  const { width } = useWindowDimensions();
   const clock = useFlickerFreeClock(speed, paused);
 
   const uniforms = useDerivedValue(() => ({

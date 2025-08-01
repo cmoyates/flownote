@@ -84,9 +84,8 @@ export default function Screen() {
         return;
       }
 
-      const refinedTranscription = await handleRefineTranscription(
-        transcription
-      );
+      const refinedTranscription =
+        await handleRefineTranscription(transcription);
       if (!refinedTranscription) {
         console.error("No refined transcription available");
         return;
@@ -130,7 +129,7 @@ export default function Screen() {
 
       console.log(
         "Refined Transcription:",
-        refinedTranscription.choices[0].message.content
+        refinedTranscription.choices[0].message.content,
       );
 
       return refinedTranscription.choices[0].message.content;

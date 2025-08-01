@@ -19,7 +19,7 @@ export const transcribeAudio = async (uri: string) => {
           "Content-Type": "multipart/form-data",
         },
         body: formData,
-      }
+      },
     );
 
     const data = await response.json();
