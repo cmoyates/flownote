@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { Settings, View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { useAudioService } from "~/services/audio";
 import { refineTranscription, transcribeAudio } from "~/services/transcription";
 import * as FileSystem from "expo-file-system";
 import { DotMatrix } from "~/components/DotMatrix";
-import { Mic, Pause, X } from "lucide-react-native";
+import { Cog, Mic, Pause, X } from "lucide-react-native";
 import { Toggle, ToggleIcon } from "~/components/ui/toggle";
 import { useSharedValue, withTiming, Easing } from "react-native-reanimated";
 import { addNoteToNotion, NOTION_DATABASE_ID } from "~/services/notion";
+import SettingsDialog from "~/components/SettingsDialog";
 
 export default function Screen() {
   const maxBrightness = useSharedValue(0.5);
@@ -158,6 +159,9 @@ export default function Screen() {
         >
           <Mic color={recorderState.isRecording ? "white" : "black"} />
         </Button>
+      </View>
+      <View className="absolute right-0 top-0 m-4 flex-row items-center gap-2">
+        <SettingsDialog />
       </View>
     </View>
   );
