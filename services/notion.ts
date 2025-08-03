@@ -2,29 +2,31 @@ import { BlockObjectRequest, Client, isFullPage } from "@notionhq/client";
 import { marked } from "marked";
 import { NotionToMarkdown } from "notion-to-md";
 
-// Initialize the Notion client
-const notion = new Client({
-  auth: process.env.EXPO_PUBLIC_NOTION_TOKEN, // Using EXPO_PUBLIC_ prefix for Expo environment variables
-});
-
-export const n2m = new NotionToMarkdown({ notionClient: notion });
-
 export const NOTION_DATABASE_ID =
   process.env.EXPO_PUBLIC_NOTION_DATABASE_ID || "";
 
-export const notionToMarkdown = async (pageID: string, noTitle?: boolean) => {
+export const notionToMarkdown = async (
+  notionAPIToken: string,
+  n2m: NotionToMarkdown,
+  pageID: string,
+  noTitle?: boolean,
+) => {
   const mdBlocks = await n2m.pageToMarkdown(pageID);
   const mdString = n2m.toMarkdownString(mdBlocks);
 
   if (noTitle) return mdString.parent;
 
-  const pageTitle = await getPageTitle(pageID);
+  const pageTitle = await getPageTitle(notionAPIToken, pageID);
 
   return `# ${pageTitle}\n\n${mdString.parent}`;
 };
 
-export const getPageTitle = async (pageID: string) => {
+export const getPageTitle = async (notionAPIToken: string, pageID: string) => {
   try {
+    const notion = new Client({
+      auth: notionAPIToken,
+    });
+
     const page = await notion.pages.retrieve({ page_id: pageID });
 
     // Use type guard to ensure we have a full page response
@@ -139,8 +141,16 @@ const markdownToNotionBlocks = (markdown: string) => {
   return blocks;
 };
 
-export const addNoteToNotion = async (markdown: string, databaseId: string) => {
+export const addNoteToNotion = async (
+  notionAPIToken: string,
+  markdown: string,
+  databaseId: string,
+) => {
   try {
+    const notion = new Client({
+      auth: notionAPIToken,
+    });
+
     const blocks = markdownToNotionBlocks(markdown);
 
     console.log("Blocks to be added:", blocks);

@@ -1,15 +1,15 @@
-import { useEffect, useState } from "react";
-import { Settings, View } from "react-native";
+import { useEffect } from "react";
+import { View } from "react-native";
 import { Button } from "~/components/ui/button";
 import { useAudioService } from "~/services/audio";
 import { refineTranscription, transcribeAudio } from "~/services/transcription";
 import * as FileSystem from "expo-file-system";
 import { DotMatrix } from "~/components/DotMatrix";
-import { Cog, Mic, Pause, X } from "lucide-react-native";
-import { Toggle, ToggleIcon } from "~/components/ui/toggle";
+import { Mic } from "lucide-react-native";
 import { useSharedValue, withTiming, Easing } from "react-native-reanimated";
 import { addNoteToNotion, NOTION_DATABASE_ID } from "~/services/notion";
 import SettingsDialog from "~/components/SettingsDialog";
+import { useAPIKeyStore } from "~/stores/apiKeyStore";
 
 export default function Screen() {
   const maxBrightness = useSharedValue(0.5);
@@ -19,12 +19,21 @@ export default function Screen() {
   const { setupAudio, startRecording, stopRecording, recorderState } =
     useAudioService();
 
+  const { initAPIKeyStore, notionAPIToken, openaiAPIKey } = useAPIKeyStore();
+
   const handleSetup = async () => {
     const isSetupSuccessful = await setupAudio();
     if (isSetupSuccessful) {
       console.log("Audio setup successful");
     } else {
       console.error("Audio setup failed");
+    }
+
+    const isAPIKeyStoreInitialized = await initAPIKeyStore();
+    if (isAPIKeyStoreInitialized) {
+      console.log("API Key Store initialized successfully");
+    } else {
+      console.error("Failed to initialize API Key Store");
     }
   };
 
@@ -94,7 +103,7 @@ export default function Screen() {
 
       console.log("Note:", refinedTranscription);
 
-      addNoteToNotion(refinedTranscription, NOTION_DATABASE_ID);
+      addNoteToNotion(notionAPIToken, refinedTranscription, NOTION_DATABASE_ID);
     } else {
       await handleStartRecording();
     }
@@ -103,7 +112,7 @@ export default function Screen() {
   const handleTranscription = async (recordingPath: string) => {
     try {
       // Assuming you have a transcription service set up
-      const transcription = await transcribeAudio(recordingPath);
+      const transcription = await transcribeAudio(openaiAPIKey, recordingPath);
       if (transcription === undefined) {
         return;
       }
@@ -126,7 +135,10 @@ export default function Screen() {
 
     try {
       // Assuming you have a refineTranscription service set up
-      const refinedTranscription = await refineTranscription(transcription);
+      const refinedTranscription = await refineTranscription(
+        openaiAPIKey,
+        transcription,
+      );
 
       console.log(
         "Refined Transcription:",

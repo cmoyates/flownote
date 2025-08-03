@@ -1,6 +1,6 @@
-export const transcribeAudio = async (uri: string) => {
+export const transcribeAudio = async (openaiAPIKey: string, uri: string) => {
   try {
-    const openaiAPIKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
+    console.log("Transcribing audio with OpenAI API Key:", openaiAPIKey);
 
     const formData = new FormData();
     formData.append("file", {
@@ -40,11 +40,11 @@ interface ChatCompletionResponse {
   object: string;
   created: number;
   model: string;
-  choices: Array<{
+  choices: {
     index: number;
     message: ChatMessage;
     finish_reason: string;
-  }>;
+  }[];
   usage: {
     prompt_tokens: number;
     completion_tokens: number;
@@ -52,10 +52,11 @@ interface ChatCompletionResponse {
   };
 }
 
-export const refineTranscription = async (transcript: string) => {
+export const refineTranscription = async (
+  openaiAPIKey: string,
+  transcript: string,
+) => {
   const OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-
-  const openaiAPIKey = process.env.EXPO_PUBLIC_OPENAI_API_KEY;
 
   const messages: ChatMessage[] = [
     {
