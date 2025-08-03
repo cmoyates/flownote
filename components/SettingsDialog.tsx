@@ -13,23 +13,36 @@ import {
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
 import { Text } from "~/components/ui/text";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useAPIKeyStore } from "~/stores/apiKeyStore";
 
 const SettingsDialog = () => {
   const [openaiKey, setOpenaiKey] = useState("");
   const [notionToken, setNotionToken] = useState("");
 
+  const {
+    openaiAPIKey: openaiAPIKeyInStore,
+    notionAPIToken: notionTokenInStore,
+    setOpenAIKey: setOpenAIKeyInStore,
+    setNotionToken: setNotionTokenInStore,
+    storeAPIKeys,
+  } = useAPIKeyStore();
+
+  useEffect(() => {
+    setOpenaiKey(openaiAPIKeyInStore || "");
+    setNotionToken(notionTokenInStore || "");
+  }, [openaiAPIKeyInStore, notionTokenInStore]);
+
   const handleSave = async () => {
-    try {
-      Alert.alert("Success", "API keys have been saved securely.", [
-        { text: "OK" },
-      ]);
-    } catch (error) {
-      console.error("Error saving keys:", error);
-      Alert.alert("Error", "Failed to save API keys. Please try again.", [
-        { text: "OK" },
-      ]);
+    if (!openaiKey || !notionToken) {
+      Alert.alert("Error", "Please fill in all fields.");
+      return;
     }
+
+    setOpenAIKeyInStore(openaiKey);
+    setNotionTokenInStore(notionToken);
+
+    await storeAPIKeys();
   };
 
   return (
