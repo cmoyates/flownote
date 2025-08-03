@@ -19,28 +19,33 @@ import { useAPIKeyStore } from "~/stores/apiKeyStore";
 const SettingsDialog = () => {
   const [openaiKey, setOpenaiKey] = useState("");
   const [notionToken, setNotionToken] = useState("");
+  const [notionDatabaseID, setNotionDatabaseID] = useState("");
 
   const {
     openaiAPIKey: openaiAPIKeyInStore,
     notionAPIToken: notionTokenInStore,
+    notionDatabaseID: notionDatabaseIDInStore,
     setOpenAIKey: setOpenAIKeyInStore,
     setNotionToken: setNotionTokenInStore,
+    setNotionDatabaseID: setNotionDatabaseIDInStore,
     storeAPIKeys,
   } = useAPIKeyStore();
 
   useEffect(() => {
     setOpenaiKey(openaiAPIKeyInStore || "");
     setNotionToken(notionTokenInStore || "");
-  }, [openaiAPIKeyInStore, notionTokenInStore]);
+    setNotionDatabaseID(notionDatabaseIDInStore || "");
+  }, [openaiAPIKeyInStore, notionTokenInStore, notionDatabaseIDInStore]);
 
   const handleSave = async () => {
-    if (!openaiKey || !notionToken) {
+    if (!openaiKey || !notionToken || !notionDatabaseID) {
       Alert.alert("Error", "Please fill in all fields.");
       return;
     }
 
     setOpenAIKeyInStore(openaiKey);
     setNotionTokenInStore(notionToken);
+    setNotionDatabaseIDInStore(notionDatabaseID);
 
     await storeAPIKeys();
   };
@@ -48,7 +53,11 @@ const SettingsDialog = () => {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className="aspect-square" variant={"outline"}>
+        <Button
+          className="aspect-square rounded-full"
+          size={"sm"}
+          variant={"outline"}
+        >
           <Cog color={"white"} />
         </Button>
       </DialogTrigger>
@@ -80,11 +89,23 @@ const SettingsDialog = () => {
               Notion Integration Token
             </Text>
             <Input
-              placeholder="secret_..."
+              placeholder="ntn_..."
               value={(notionToken as string) || ""}
               onChangeText={setNotionToken}
               secureTextEntry
               aria-labelledby="notion-token-label"
+            />
+          </View>
+
+          <View className="gap-2">
+            <Text className="text-sm font-medium text-foreground">
+              Notion Database ID
+            </Text>
+            <Input
+              placeholder="127db..."
+              value={(notionDatabaseID as string) || ""}
+              onChangeText={setNotionDatabaseID}
+              aria-labelledby="notion-database-id-label"
             />
           </View>
         </View>

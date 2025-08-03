@@ -2,9 +2,6 @@ import { BlockObjectRequest, Client, isFullPage } from "@notionhq/client";
 import { marked } from "marked";
 import { NotionToMarkdown } from "notion-to-md";
 
-export const NOTION_DATABASE_ID =
-  process.env.EXPO_PUBLIC_NOTION_DATABASE_ID || "";
-
 export const notionToMarkdown = async (
   notionAPIToken: string,
   n2m: NotionToMarkdown,

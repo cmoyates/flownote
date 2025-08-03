@@ -7,7 +7,7 @@ import * as FileSystem from "expo-file-system";
 import { DotMatrix } from "~/components/DotMatrix";
 import { Mic } from "lucide-react-native";
 import { useSharedValue, withTiming, Easing } from "react-native-reanimated";
-import { addNoteToNotion, NOTION_DATABASE_ID } from "~/services/notion";
+import { addNoteToNotion } from "~/services/notion";
 import SettingsDialog from "~/components/SettingsDialog";
 import { useAPIKeyStore } from "~/stores/apiKeyStore";
 
@@ -19,7 +19,8 @@ export default function Screen() {
   const { setupAudio, startRecording, stopRecording, recorderState } =
     useAudioService();
 
-  const { initAPIKeyStore, notionAPIToken, openaiAPIKey } = useAPIKeyStore();
+  const { initAPIKeyStore, notionAPIToken, openaiAPIKey, notionDatabaseID } =
+    useAPIKeyStore();
 
   const handleSetup = async () => {
     const isSetupSuccessful = await setupAudio();
@@ -103,7 +104,7 @@ export default function Screen() {
 
       console.log("Note:", refinedTranscription);
 
-      addNoteToNotion(notionAPIToken, refinedTranscription, NOTION_DATABASE_ID);
+      addNoteToNotion(notionAPIToken, refinedTranscription, notionDatabaseID);
     } else {
       await handleStartRecording();
     }
