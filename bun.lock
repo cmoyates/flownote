@@ -33,7 +33,6 @@
         "expo-splash-screen": "~0.30.8",
         "expo-status-bar": "~2.2.3",
         "expo-system-ui": "~5.0.7",
-        "jotai": "^2.12.5",
         "lucide-react-native": "^0.511.0",
         "marked": "^16.1.1",
         "nativewind": "^4.1.23",
@@ -50,6 +49,7 @@
         "tailwindcss": "3.3.5",
         "tailwindcss-animate": "^1.0.7",
         "zod": "^4.0.14",
+        "zustand": "^5.0.7",
       },
       "devDependencies": {
         "@babel/core": "^7.26.0",
@@ -1272,8 +1272,6 @@
     "jimp-compact": ["jimp-compact@0.16.1", "", {}, "sha512-dZ6Ra7u1G8c4Letq/B5EzAxj4tLFHL+cGtdpR+PVm4yzPDj+lCk+AbivWt1eOM+ikzkowtyV7qSqX6qr3t71Ww=="],
 
     "jiti": ["jiti@1.21.7", "", { "bin": { "jiti": "bin/jiti.js" } }, "sha512-/imKNG4EbWNrVjoNC/1H5/9GFy+tqjGBHCaSsN+P2RnPqjsLmv6UD3Ej+Kj8nBWaRAwyk7kK5ZUc+OEatnTR3A=="],
-
-    "jotai": ["jotai@2.12.5", "", { "peerDependencies": { "@types/react": ">=17.0.0", "react": ">=17.0.0" }, "optionalPeers": ["@types/react", "react"] }, "sha512-G8m32HW3lSmcz/4mbqx0hgJIQ0ekndKWiYP7kWVKi0p6saLXdSoye+FZiOFyonnd7Q482LCzm8sMDl7Ar1NWDw=="],
 
     "js-tokens": ["js-tokens@4.0.0", "", {}, "sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ=="],
 

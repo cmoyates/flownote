@@ -1,5 +1,4 @@
 import { Cog } from "lucide-react-native";
-import { useAtom, useAtomValue } from "jotai";
 import { View, Alert } from "react-native";
 import { Button } from "~/components/ui/button";
 import {
